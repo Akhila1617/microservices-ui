@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../features/productSlice";
 
 function ProductListPage() {
 
-    const [products, setProducts] = useState([]);
+    const dispatch = useDispatch();
+
+    const products = useSelector(
+        (state) => state.products.products
+    );
 
     useEffect(() => {
-        api.get("/product")
-            .then(response => setProducts(response.data))
-            .catch(error => console.error(error));
-    }, []);
+        dispatch(fetchProducts());
+    }, [dispatch]);
 
     return (
         <div>
