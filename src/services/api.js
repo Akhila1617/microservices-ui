@@ -5,3 +5,10 @@ const api = axios.create({
 });
 
 export default api;
+
+export const addToCart = (productId) => {
+    return api.post("http://localhost:8082/cart", {
+        productId: productId,
+        quantity: 1
+    });
+};
