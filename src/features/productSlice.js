@@ -9,12 +9,22 @@ export const fetchProducts = createAsyncThunk(
     }
 );
 
+export const fetchProductsPage = createAsyncThunk(
+    "products/fetchProductsPage",
+    async ({ page, size, sortBy }) => {
+        const response = await api.get(`/product/page?page=${page}&size=${size}&sortBy=${sortBy}`);
+        return response.data;
+    }
+);
+
 const productSlice = createSlice({
     name: "products",
     initialState: {
         products: [],
         loading: false,
-        error: null
+        error: null,
+        currentPage: 0,
+        totalPages: 0
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -28,6 +38,20 @@ const productSlice = createSlice({
                 state.products = action.payload;
             })
             .addCase(fetchProducts.rejected, (state) => {
+                state.loading = false;
+                state.error = "Failed to load products";
+            })
+            .addCase(fetchProductsPage.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchProductsPage.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = action.payload.content;
+                state.currentPage = action.payload.number;
+                state.totalPages = action.payload.totalPages;
+            })
+            .addCase(fetchProductsPage.rejected, (state) => {
                 state.loading = false;
                 state.error = "Failed to load products";
             });

@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../features/productSlice";
+import { fetchProductsPage } from "../features/productSlice";
 import { addToCart } from "../services/api";
 
 function ProductListPage() {
@@ -13,6 +13,8 @@ function ProductListPage() {
     const products = useSelector((state) => state.products.products);
     const loading = useSelector((state) => state.products.loading);
     const error = useSelector((state) => state.products.error);
+    const currentPage = useSelector((state) => state.products.currentPage);
+    const totalPages = useSelector((state) => state.products.totalPages);
 
     const filteredProducts = useMemo(() => {
         return products.filter(product => {
@@ -37,12 +39,17 @@ function ProductListPage() {
     };
 
     useEffect(() => {
-        dispatch(fetchProducts());
+        dispatch(fetchProductsPage({ page: 0, size: 3, sortBy: "name" }));
     }, [dispatch]);
+
+    const goToPage = (pageNumber) => {
+        dispatch(fetchProductsPage({ page: pageNumber, size: 3, sortBy: "name" }));
+    };
 
     return (
         <div>
             <h2>Product List</h2>
+
             <input
                 type="text"
                 placeholder="Search Product"
@@ -69,6 +76,22 @@ function ProductListPage() {
                     </button>
                 </div>
             ))}
+
+            <button
+                disabled={currentPage === 0}
+                onClick={() => goToPage(currentPage - 1)}
+            >
+                Prev
+            </button>
+
+            <span> Page {currentPage + 1} of {totalPages} </span>
+
+            <button
+                disabled={currentPage + 1 >= totalPages}
+                onClick={() => goToPage(currentPage + 1)}
+            >
+                Next
+            </button>
         </div>
     );
 }
