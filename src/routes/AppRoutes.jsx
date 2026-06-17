@@ -1,14 +1,15 @@
+import { Routes, Route } from "react-router-dom";
 import ProductListPage from "../pages/ProductListPage";
 import AddProductPage from "../pages/AddProductPage";
 import CartPage from "../pages/CartPage";
 
 function AppRoutes() {
     return (
-        <div>
-            <ProductListPage />
-            <AddProductPage />
-            <CartPage />
-        </div>
+        <Routes>
+            <Route path="/products" element={<ProductListPage />} />
+            <Route path="/add-product" element={<AddProductPage />} />
+            <Route path="/cart" element={<CartPage />} />
+        </Routes>
     );
 }
 
