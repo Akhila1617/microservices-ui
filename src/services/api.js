@@ -6,6 +6,10 @@ const api = axios.create({
 
 export default api;
 
+export const getCartItems = () => {
+    return axios.get("http://localhost:8082/cart");
+};
+
 export const addToCart = (productId) => {
     return api.post("http://localhost:8082/cart", {
         productId: productId,
