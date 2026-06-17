@@ -7,21 +7,16 @@ function ProductListPage() {
 
     const dispatch = useDispatch();
 
-    const products = useSelector(
-        (state) => state.products.products
-    );
-
+    const products = useSelector((state) => state.products.products);
+    const loading = useSelector((state) => state.products.loading);
+    const error = useSelector((state) => state.products.error);
 
     const handleAddToCart = (productId) => {
-        console.log("Clicked product:", productId);
-
         addToCart(productId)
-            .then((response) => {
-                console.log("Success:", response.data);
+            .then(() => {
                 alert("Product added to cart");
             })
-            .catch((error) => {
-                console.error("Error:", error);
+            .catch(() => {
                 alert("Error adding product");
             });
     };
@@ -33,6 +28,10 @@ function ProductListPage() {
     return (
         <div>
             <h2>Product List</h2>
+
+            {loading && <p>Loading products...</p>}
+
+            {error && <p>{error}</p>}
 
             {products.map(product => (
                 <div key={product.id}>
