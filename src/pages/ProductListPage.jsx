@@ -1,20 +1,20 @@
-import { useEffect, useState, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProductsPage } from "../features/productSlice";
+import { useProducts } from "../hooks/useProducts";
+import { useState, useMemo } from "react";
 import { addToCart } from "../services/api";
 
 function ProductListPage() {
-
-    const dispatch = useDispatch();
-
+    
     const [searchText, setSearchText] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
 
-    const products = useSelector((state) => state.products.products);
-    const loading = useSelector((state) => state.products.loading);
-    const error = useSelector((state) => state.products.error);
-    const currentPage = useSelector((state) => state.products.currentPage);
-    const totalPages = useSelector((state) => state.products.totalPages);
+    const {
+        products,
+        loading,
+        error,
+        currentPage,
+        totalPages,
+        loadPage
+    } = useProducts();
 
     const filteredProducts = useMemo(() => {
         return products.filter(product => {
@@ -38,12 +38,8 @@ function ProductListPage() {
             });
     };
 
-    useEffect(() => {
-        dispatch(fetchProductsPage({ page: 0, size: 3, sortBy: "name" }));
-    }, [dispatch]);
-
     const goToPage = (pageNumber) => {
-        dispatch(fetchProductsPage({ page: pageNumber, size: 3, sortBy: "name" }));
+        loadPage(pageNumber);
     };
 
     return (
